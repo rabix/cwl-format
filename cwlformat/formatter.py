@@ -6,6 +6,7 @@ import ruamel.yaml
 from ruamel.yaml.compat import StringIO
 
 from cwlformat.version import __version__
+from cwlformat.keyorder import key_order_dict
 
 yaml = ruamel.yaml.YAML()
 Literal = ruamel.yaml.scalarstring.LiteralScalarString
@@ -27,7 +28,7 @@ def leading_comment_lines(raw_cwl: str):
     return "".join(top_comment)
 
 
-def format_node(cwl: Union[dict, list, str]):
+def format_node(cwl: Union[dict, list, str], node_path=None):
     if isinstance(cwl, str):
         if len(cwl) > 80:
             return Literal(cwl)
@@ -35,23 +36,34 @@ def format_node(cwl: Union[dict, list, str]):
             return cwl
 
     elif isinstance(cwl, dict):
-        return {k: format_node(v) for k, v in reorder_node(cwl)}
+        return {k: format_node(v, node_path + [k]) for k, v in reorder_node(cwl, node_path)}
 
     elif isinstance(cwl, list):
-        return [format_node(v) for v in cwl]
+        return [format_node(v, node_path) for v in cwl]
 
     else:
         return cwl
 
 
-def reorder_node(cwl: dict) -> dict:
-    for k in sorted(cwl.keys()):
-        yield k, cwl[k]
+def reorder_node(cwl: dict, node_path: list) -> dict:
+    known_key_order = key_order_dict.get(infer_type(cwl, node_path), [])
+    extra_keys = sorted(set(cwl.keys()) - set(known_key_order))
+
+    for k in known_key_order + extra_keys:
+        if k in cwl:
+            yield k, cwl[k]
+
+
+def infer_type(cwl: dict, node_path: list):
+    if "class" in cwl:
+        return cwl["class"]
+
+    return "unknown"
 
 
 def cwl_format(raw_cwl: str) -> str:
     as_dict = yaml.load(raw_cwl)
-    as_dict = format_node(as_dict)
+    as_dict = format_node(as_dict, node_path=[])
     stream = StringIO()
     yaml.dump(as_dict, stream)
     return leading_comment_lines(raw_cwl) + stream.getvalue()
