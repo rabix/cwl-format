@@ -9,6 +9,7 @@ from cwlformat.version import __version__
 from cwlformat.keyorder import key_order_dict
 
 yaml = ruamel.yaml.YAML()
+yaml.indent(mapping=2, sequence=4, offset=2)
 Literal = ruamel.yaml.scalarstring.LiteralScalarString
 
 
@@ -46,7 +47,8 @@ def format_node(cwl: Union[dict, list, str], node_path=None):
 
 
 def reorder_node(cwl: dict, node_path: list) -> dict:
-    known_key_order = key_order_dict.get(infer_type(cwl, node_path), [])
+    known_key_order = key_order_dict.get(
+        infer_type(cwl, node_path), key_order_dict["generic-ordering"])
     extra_keys = sorted(set(cwl.keys()) - set(known_key_order))
 
     for k in known_key_order + extra_keys:
@@ -57,8 +59,8 @@ def reorder_node(cwl: dict, node_path: list) -> dict:
 def infer_type(cwl: dict, node_path: list):
     if "class" in cwl:
         return cwl["class"]
-
-    return "unknown"
+    else:
+        return "generic-ordering"
 
 
 def cwl_format(raw_cwl: str) -> str:
