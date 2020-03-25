@@ -1,16 +1,20 @@
 # Copyright (c) 2020 Seven Bridges
 
 from typing import Union
+import sys
+import importlib.resources as pkg_resources
 
 import ruamel.yaml
 from ruamel.yaml.compat import StringIO
 
 from cwlformat.version import __version__
-from cwlformat.keyorder import key_order_dict
+import cwlformat
 
 yaml = ruamel.yaml.YAML()
 yaml.indent(mapping=2, sequence=4, offset=2)
 Literal = ruamel.yaml.scalarstring.LiteralScalarString
+
+key_order_dict = yaml.load(pkg_resources.read_text(cwlformat, "keyorder.yml"))
 
 
 def leading_comment_lines(raw_cwl: str):
@@ -80,7 +84,7 @@ def main():
                     "A very opinionated code formatter for CWL")
     parser.add_argument("cwlfile")
     args = parser.parse_args()
-    print(cwl_format(open(args.cwlfile, "r").read()))
+    sys.stdout.write(cwl_format(open(args.cwlfile, "r").read()))
 
 
 if __name__ == "__main__":
