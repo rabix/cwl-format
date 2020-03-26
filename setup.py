@@ -18,11 +18,12 @@ version = _ver["__version__"]
 
 
 setup(
-    name='CWLformat',
+    name='cwlformat',
     python_requires='>=3.7.0',
     version=version,
     description='A prettifier for CWL code',
     long_description=readme,
+    long_description_content_type="text/markdown",
     author='Kaushik Ghose',
     author_email='kaushik.ghose@sbgenomics.com',
     url='https://github.com/kaushik-work/cwlformat',
