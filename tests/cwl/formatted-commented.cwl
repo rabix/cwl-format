@@ -20,5 +20,5 @@ outputs:
       loadContents: true
 baseCommand: echo
 arguments:
-  - valueFrom: $(runtime)
+- valueFrom: $(runtime)
 stdout: out.txt

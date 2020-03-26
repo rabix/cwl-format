@@ -11,7 +11,7 @@ from cwlformat.version import __version__
 import cwlformat
 
 yaml = ruamel.yaml.YAML()
-yaml.indent(mapping=2, sequence=4, offset=2)
+yaml.indent(mapping=2, sequence=2, offset=0)
 Literal = ruamel.yaml.scalarstring.LiteralScalarString
 
 key_order_dict = yaml.load(pkg_resources.read_text(cwlformat, "keyorder.yml"))
