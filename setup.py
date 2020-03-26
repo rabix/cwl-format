@@ -33,7 +33,7 @@ setup(
             'cwl-format=cwlformat.formatter:main'
         ],
     },
-    package_data={"cwlformat": ["cwlformat/keyorder.yml"]},
+    include_package_data=True,
     install_requires=[
         "ruamel.yaml >= 0.15.77",
     ]

@@ -15,13 +15,15 @@ implementation of the formatter.
   **Do not use this if all comments in the YAML are important to you**. 
 
 - All CWL fields are ordered systematically. The field order for specific 
-  fields ("pinned fields") are defined in [this YAML file](cwlformat/keyorder.yml). 
-  Any fields not present in this file ("free fields") are printed after the
-  pinned fields and ordered alphabetically.
+  fields have a defined precedence ("pinned fields"). Any fields not 
+  present in this file ("free fields") are printed after the pinned fields 
+  and ordered alphabetically.
 
-- Specific pinned fields are available for CommandLineTool, 
-  ExpressionTool and Workflow processes. Everything else follows a generic
-  ordering of pinned fields.
+- The pinned fields are defined in [this YAML file](cwlformat/keyorder.yml). 
+
+- Specific pinned field orderings are available for CommandLineTool, 
+  ExpressionTool and Workflow processes. All other types follow a generic
+  pinned field list.
  
 - All strings that fit within 80 columns are expressed in flow style.
   Longer strings or strings with new lines are expressed in block style.
