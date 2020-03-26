@@ -17,7 +17,3 @@ def test_top_comment():
     first_lines_formatted = formatted_cwl.splitlines(keepends=True)[:3]
 
     assert first_lines_raw == first_lines_formatted
-
-
-def test_node_conservation():
-    pass
