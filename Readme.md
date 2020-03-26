@@ -1,6 +1,6 @@
 # CWL Format
 
-![](https://github.com/rabix/cwlformat/workflows/Tests/badge.svg)
+![Tests](https://github.com/rabix/cwlformat/workflows/Tests/badge.svg)
 
 CWL Format is a specification and a reference implementation for
 a very opinionated CWL code formatter.
@@ -11,6 +11,21 @@ CWL Format is always correct.
 
 This repository lists the formatting rules and also contains a Python
 implementation of the formatter.
+
+```
+pip install cwlformat
+cwl-format unformatted.cwl > formatted.cwl
+```
+
+Use programmatically in Python by doing
+
+```python
+
+from cwlformat.formatter import cwl_format
+
+formatted_text = cwl_format(unformatted_text)
+```
+
 
 ## Rules
 
@@ -42,7 +57,7 @@ implementation of the formatter.
 
 ## Conformance tests
 
-A series of documents are found in the [`tests`](tests) directory that can be used
+A series of documents are found in the [`tests`][tests] directory that can be used
 to check correctness of a formatter. The files named `original-*` are the input files
 and the files named `formatted-*` are the corresponding formatted documents. There
 are a mixture of YAML and JSON input files. Formatted files are always YAML.

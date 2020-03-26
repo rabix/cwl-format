@@ -3,19 +3,13 @@
 import pathlib
 from setuptools import setup, find_packages
 
-
-with open('Readme.md') as f:
-    readme = f.read()
-
-with open('LICENSE') as f:
-    license_text = f.read()
-
 current_path = pathlib.Path(__file__).parent
 ver_path = pathlib.Path(current_path, "cwlformat", "version.py")
 _ver = {}
 exec(ver_path.open("r").read(), _ver)
 version = _ver["__version__"]
 
+readme = pathlib.Path(current_path, "Readme.md").read_text()
 
 setup(
     name='cwlformat',
@@ -27,7 +21,6 @@ setup(
     author='Kaushik Ghose',
     author_email='kaushik.ghose@sbgenomics.com',
     url='https://github.com/kaushik-work/cwlformat',
-    license=license_text,
     packages=find_packages(exclude=('tests', 'docs')),
     entry_points={
         'console_scripts': [
