@@ -3,54 +3,39 @@
 CWL Format is a very opinionated code formatter for CWL.
 It outputs CWL in a standardized YAML format. It has no settings or
 options because you have better things to do with your time. And because
-cwl-format is always correct.
+CWL Format is always correct.
 
 This repository lists the formatting rules and also contains a Python
 implementation of the formatter.
 
 ## Rules
 
-- Comments are not preserved **Do not use this if comments in the YAML
-  are important to you**. The only exception to this rule is if there
-  are any comment lines at the top of the file, before the actual code,
-  these lines are preserved as is, exactly, including blank lines.
-- All CWL fields are ordered in a fixed manner. The ordering of the
-  fields is defined in a set of YAML files available for each
-  version of the CWL standard. The YAML files are described below. 
+- Only comment lines at the top of the file, including blank lines,
+  before the actual CWL code are preserved. All other comments are lost.
+  **Do not use this if all comments in the YAML are important to you**. 
+
+- All CWL fields are ordered systematically. The field order for specific 
+  fields ("pinned fields") are defined in [this YAML file](cwlformat/keyorder.yml). 
+  Any fields not present in this file ("free fields") are printed after the
+  pinned fields and ordered alphabetically.
+
+- Specific pinned fields are available for CommandLineTool, 
+  ExpressionTool and Workflow processes. Everything else follows a generic
+  ordering of pinned fields.
+ 
 - All strings that fit within 80 columns are expressed in flow style.
   Longer strings or strings with new lines are expressed in block style.
-- All lists and maps are expressed in block fashion unless they are
-  simple strings and are short enough to fit within 80 columns, in which
-  case they are expressed in flow style.
+
+- All lists and maps are expressed in block style
+
 - The ordering of all lists are preserved
-- Maps are ordered as follows
-  - Maps with no intrinsic ordering, like I/O ports, are ordered
-    alphabetically
-  - Steps expressed as a map are ordered by topologically sorting the
-    workflow DAQ. i.e. steps that execute first are ordered first. This 
-    allows step ordering to be stable over id changes.
-    If steps can execute in parallel they are ordered alphabetically. 
 
-### Inference rules
+- Indentation is 2 spaces, including for lists
 
-The template for a CWL version is organized as follows 
 
-``` 
-Workflow:
-    - simple_field
-    - complex_field
-        - 
-            - f11
-            - f12
-        -
-            - f21
-            - f22
+## Conformance tests
 
-CommandLineTool:
-    - 
-
-ExpressionTool:
-    -
-```
-
-A simple type inference rule is used: 
+A series of documents are found in the [`tests`](tests/cwl) directory that can be used
+to check correctness of a formatter. The files named `original-*` are the input files
+and the files named `formatted-*` are the corresponding formatted documents. There
+are a mixture of YAML and JSON input files. Formatted files are always YAML.
