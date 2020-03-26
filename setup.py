@@ -33,8 +33,7 @@ setup(
             'cwl-format=cwlformat.formatter:main'
         ],
     },
-    # https://docs.python.org/3.7/distutils/setupscript.html#installing-additional-files
-    data_files=[("keyorder", ["cwlformat/keyorder.yml"])],
+    package_data={"cwlformat": ["cwlformat/keyorder.yml"]},
     install_requires=[
         "ruamel.yaml >= 0.15.77",
     ]
