@@ -1,5 +1,7 @@
 # CWL Format
 
+![](https://github.com/rabix/cwlformat/workflows/Tests/badge.svg)
+
 CWL Format is a very opinionated code formatter for CWL.
 It outputs CWL in a standardized YAML format. It has no settings or
 options because you have better things to do with your time. And because
