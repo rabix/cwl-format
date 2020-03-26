@@ -2,7 +2,9 @@
 
 ![](https://github.com/rabix/cwlformat/workflows/Tests/badge.svg)
 
-CWL Format is a very opinionated code formatter for CWL.
+CWL Format is a specification and a reference implementation for
+a very opinionated CWL code formatter.
+
 It outputs CWL in a standardized YAML format. It has no settings or
 options because you have better things to do with your time. And because
 CWL Format is always correct.
@@ -21,7 +23,7 @@ implementation of the formatter.
   present in this file ("free fields") are printed after the pinned fields 
   and ordered alphabetically.
 
-- The pinned fields are defined in [this YAML file](cwlformat/keyorder.yml). 
+- The pinned fields are defined in [this YAML file][spec]. 
 
 - Specific pinned field orderings are available for CommandLineTool, 
   ExpressionTool and Workflow processes. All other types follow a generic
@@ -36,10 +38,13 @@ implementation of the formatter.
 
 - Indentation is 2 spaces, including for lists
 
+[spec]: https://raw.githubusercontent.com/rabix/cwl-format/master/cwlformat/keyorder.yml
 
 ## Conformance tests
 
-A series of documents are found in the [`tests`](tests/cwl) directory that can be used
+A series of documents are found in the [`tests`](tests) directory that can be used
 to check correctness of a formatter. The files named `original-*` are the input files
 and the files named `formatted-*` are the corresponding formatted documents. There
 are a mixture of YAML and JSON input files. Formatted files are always YAML.
+
+[tests]: https://github.com/rabix/cwl-format/tree/master/tests/cwl
