@@ -22,6 +22,10 @@ generic-ordering:
   - loadListing
   - dockerPull
 
+  # Dirent
+  - entryname
+  - writable
+
   # WorkflowStep
   - in
   - scatter

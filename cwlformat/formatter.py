@@ -5,6 +5,7 @@ import sys
 import importlib.resources as pkg_resources
 
 import ruamel.yaml
+from ruamel.yaml import scalarstring
 from ruamel.yaml.compat import StringIO
 
 from cwlformat.version import __version__
