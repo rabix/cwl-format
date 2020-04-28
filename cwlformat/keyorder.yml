@@ -50,6 +50,8 @@ CommandLineTool:
   - requirements
   - inputs
   - outputs
+  - stdout
+  - stderr
   - baseCommand
   - arguments
   - stdout

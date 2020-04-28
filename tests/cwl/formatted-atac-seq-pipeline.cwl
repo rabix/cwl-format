@@ -2,10 +2,12 @@ class: Workflow
 cwlVersion: v1.0
 label: ATAC-seq-pipeline-se
 doc: 'ATAC-seq pipeline - reads: SE'
+
 requirements:
 - class: ScatterFeatureRequirement
 - class: SubworkflowFeatureRequirement
 - class: StepInputExpressionRequirement
+
 inputs:
   as_narrowPeak_file:
     doc: Definition narrowPeak file in AutoSql format (used in bedToBigBed)
@@ -62,6 +64,7 @@ inputs:
     doc: |-
       JVM arguments should be a quoted, space separated list (e.g. "-Xms128m -Xmx512m")
     type: string?
+
 outputs:
   map_bowtie_log_files:
     doc: Bowtie log file with mapping stats
@@ -168,6 +171,7 @@ outputs:
     doc: Raw read counts of fastq files after trimming
     type: File[]
     outputSource: trimm/output_trimmed_fastq_read_count
+
 steps:
   map:
     in:
@@ -181,11 +185,13 @@ steps:
       class: Workflow
       cwlVersion: v1.0
       doc: 'ATAC-seq 03 mapping - reads: SE'
+
       requirements:
       - class: ScatterFeatureRequirement
       - class: SubworkflowFeatureRequirement
       - class: StepInputExpressionRequirement
       - class: InlineJavascriptRequirement
+
       inputs:
         genome_ref_first_index_file:
           doc: |-
@@ -214,6 +220,7 @@ steps:
           doc: |-
             JVM arguments should be a quoted, space separated list (e.g. "-Xms128m -Xmx512m")
           type: string?
+
       outputs:
         output_bowtie_log:
           doc: Bowtie log file.
@@ -255,6 +262,7 @@ steps:
           doc: Read counts of the mapped and filtered BAM files
           type: File[]
           outputSource: mapped_filtered_reads_count/output_read_count
+
       steps:
         bam_idxstats:
           in:
@@ -263,11 +271,13 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InitialWorkDirRequirement:
                 listing:
                 - $(inputs.bam)
               InlineJavascriptRequirement: {}
+
             inputs:
               bam:
                 doc: Bam file (it should be indexed)
@@ -276,6 +286,7 @@ steps:
                 - .bai
                 inputBinding:
                   position: 1
+
             outputs:
               idxstats_file:
                 doc: |
@@ -284,10 +295,12 @@ steps:
                 type: File
                 outputBinding:
                   glob: $(inputs.bam.basename + ".idxstats")
+            stdout: $(inputs.bam.basename + ".idxstats")
+
             baseCommand:
             - samtools
             - idxstats
-            stdout: $(inputs.bam.basename + ".idxstats")
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -310,9 +323,11 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               X:
                 doc: 'maximum insert size for paired-end alignment (default: 250)'
@@ -419,6 +434,7 @@ steps:
                 inputBinding:
                   prefix: -v
                   position: 3
+
             outputs:
               output_aligned_file:
                 doc: Aligned bowtie file in [SAM|BAM] format.
@@ -429,11 +445,13 @@ steps:
                 type: File
                 outputBinding:
                   glob: $(inputs.output_filename + '.bowtie.log')
+            stderr: $(inputs.output_filename + '.bowtie.log')
+
             baseCommand: bowtie
             arguments:
             - position: 11
               valueFrom: $(inputs.output_filename + '.sam')
-            stderr: $(inputs.output_filename + '.bowtie.log')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/bowtie
@@ -449,8 +467,10 @@ steps:
             class: Workflow
             cwlVersion: v1.0
             doc: ChIP-seq - map - PCR Bottleneck Coefficients
+
             requirements:
             - class: ScatterFeatureRequirement
+
             inputs:
               genome_sizes:
                 type: File
@@ -458,10 +478,12 @@ steps:
                 type: File[]
               input_output_filenames:
                 type: string[]
+
             outputs:
               pbc_file:
                 type: File[]
                 outputSource: compute_pbc/pbc
+
             steps:
               bedtools_genomecov:
                 in:
@@ -561,9 +583,11 @@ steps:
 
                     	mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e \
                     	"select chrom, size from hg19.chromInfo" > hg19.genome
+
                   requirements:
                     InlineJavascriptRequirement: {}
                     ShellCommandRequirement: {}
+
                   inputs:
                     '3':
                       doc: "\tCalculate coverage of 3\" positions (instead of entire\
@@ -693,17 +717,20 @@ steps:
                       inputBinding:
                         prefix: -trackopts
                         position: 1
+
                   outputs:
                     output_bedfile:
                       type: File
                       outputBinding:
                         glob: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
                           '') + '.bdg')
+                  stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
+                    '') + '.bdg')
+
                   baseCommand:
                   - bedtools
                   - genomecov
-                  stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
-                    '') + '.bdg')
+
                   hints:
                     DockerRequirement:
                       dockerPull: dukegcb/bedtools
@@ -721,6 +748,7 @@ steps:
                   class: CommandLineTool
                   cwlVersion: v1.0
                   doc: Compute PCR Bottleneck Coeficient from BedGraph file.
+
                   inputs:
                     bedgraph_file:
                       type: File
@@ -728,15 +756,17 @@ steps:
                         position: 1
                     output_filename:
                       type: string
+
                   outputs:
                     pbc:
                       type: File
                       outputBinding:
                         glob: $(inputs.output_filename + '.PBC.txt')
+                  stdout: $(inputs.output_filename + '.PBC.txt')
+
                   baseCommand:
                   - awk
                   - $4==1 {N1 += $3 - $2}; $4>=1 {Nd += $3 - $2} END {print N1/Nd}
-                  stdout: $(inputs.output_filename + '.PBC.txt')
                 out:
                 - pbc
           out:
@@ -749,20 +779,25 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extracts the base name of a file
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_basename:
                 type: string
                 outputBinding:
                   outputEval: |-
                     $(inputs.input_file.path.substr(inputs.input_file.path.lastIndexOf('/') + 1, inputs.input_file.path.lastIndexOf('.') - (inputs.input_file.path.lastIndexOf('/') + 1)))
+
             baseCommand: echo
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -776,17 +811,21 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extracts the base name of a file
+
             inputs:
               file_path:
                 type: string
                 inputBinding:
                   position: 1
+
             outputs:
               output_path:
                 type: string
                 outputBinding:
                   outputEval: $(inputs.file_path.replace(/\.[^/.]+$/, ""))
+
             baseCommand: echo
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -803,8 +842,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
@@ -821,12 +862,15 @@ steps:
               output_filename:
                 doc: Basename for the output file
                 type: string
+
             outputs:
               filtered_file:
                 doc: Filter unmapped reads in aligned file
                 type: File
                 outputBinding:
                   glob: $(inputs.output_filename + '.accepted_hits.bam')
+            stdout: $(inputs.output_filename + '.accepted_hits.bam')
+
             baseCommand:
             - samtools
             - view
@@ -834,7 +878,7 @@ steps:
             - '4'
             - -b
             - -h
-            stdout: $(inputs.output_filename + '.accepted_hits.bam')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -849,8 +893,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
@@ -876,6 +922,7 @@ steps:
                   e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
+
             outputs:
               sorted_file:
                 doc: Sorted aligned file
@@ -883,11 +930,13 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+            stdout: |-
+              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             baseCommand:
             - samtools
             - sort
-            stdout: |-
-              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -900,17 +949,20 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InitialWorkDirRequirement:
                 listing:
                 - $(inputs.input_file)
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               indexed_file:
                 doc: Indexed BAM file
@@ -918,12 +970,14 @@ steps:
                 secondaryFiles: .bai
                 outputBinding:
                   glob: $(inputs.input_file.basename)
+
             baseCommand:
             - samtools
             - index
             arguments:
             - position: 2
               valueFrom: $(inputs.input_file.basename + '.bai')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -937,17 +991,20 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InitialWorkDirRequirement:
                 listing:
                 - $(inputs.input_file)
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               indexed_file:
                 doc: Indexed BAM file
@@ -955,12 +1012,14 @@ steps:
                 secondaryFiles: .bai
                 outputBinding:
                   glob: $(inputs.input_file.basename)
+
             baseCommand:
             - samtools
             - index
             arguments:
             - position: 2
               valueFrom: $(inputs.input_file.basename + '.bai')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -974,17 +1033,20 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InitialWorkDirRequirement:
                 listing:
                 - $(inputs.input_file)
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               indexed_file:
                 doc: Indexed BAM file
@@ -992,12 +1054,14 @@ steps:
                 secondaryFiles: .bai
                 outputBinding:
                   glob: $(inputs.input_file.basename)
+
             baseCommand:
             - samtools
             - index
             arguments:
             - position: 2
               valueFrom: $(inputs.input_file.basename + '.bai')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -1010,17 +1074,20 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InitialWorkDirRequirement:
                 listing:
                 - $(inputs.input_file)
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               indexed_file:
                 doc: Indexed BAM file
@@ -1028,12 +1095,14 @@ steps:
                 secondaryFiles: .bai
                 outputBinding:
                   glob: $(inputs.input_file.basename)
+
             baseCommand:
             - samtools
             - index
             arguments:
             - position: 2
               valueFrom: $(inputs.input_file.basename + '.bai')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -1049,9 +1118,11 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extract mapped reads from BAM file using Samtools flagstat command
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               input_bam_file:
                 doc: Aligned BAM file to filter
@@ -1060,6 +1131,7 @@ steps:
                   position: 1
               output_suffix:
                 type: string
+
             outputs:
               output_read_count:
                 doc: Samtools Flagstat report file
@@ -1067,6 +1139,9 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+            stdout: |-
+              $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+
             baseCommand:
             - samtools
             - flagstat
@@ -1074,8 +1149,7 @@ steps:
             - position: 10000
               valueFrom: " | head -n1 | cut -f 1 -d ' '"
               shellQuote: false
-            stdout: |-
-              $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools
@@ -1089,20 +1163,25 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Get number of processed reads from Bowtie log.
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               bowtie_log:
                 type: File
                 inputBinding: {}
+
             outputs:
               output:
                 type: File
                 outputBinding:
                   glob: $(inputs.bowtie_log.path.replace(/^.*[\\\/]/, '') + '.read_count.mapped')
-            baseCommand: read-count-from-bowtie-log.sh
             stdout: $(inputs.bowtie_log.path.replace(/^.*[\\\/]/, '') + '.read_count.mapped')
+
+            baseCommand: read-count-from-bowtie-log.sh
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -1123,9 +1202,11 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               barcode_tag:
                 doc: |-
@@ -1175,6 +1256,7 @@ steps:
                 inputBinding:
                   position: 5
                   valueFrom: $('REMOVE_DUPLICATES=' + self)
+
             outputs:
               output_dedup_bam_file:
                 type: File
@@ -1184,6 +1266,7 @@ steps:
                 type: File
                 outputBinding:
                   glob: $(inputs.output_filename + '.' + inputs.metrics_suffix)
+
             baseCommand:
             - java
             arguments:
@@ -1198,6 +1281,7 @@ steps:
             - position: 5
               valueFrom: $('TMP_DIR='+runtime.tmpdir)
               shellQuote: false
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/picard
@@ -1216,8 +1300,10 @@ steps:
           run:
             class: ExpressionTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               chrom:
                 doc: Query chromosome used to calculate percentage
@@ -1230,6 +1316,7 @@ steps:
               output_filename:
                 doc: Save the percentage in a file of the given name
                 type: string?
+
             outputs:
               percent_map:
                 type:
@@ -1272,22 +1359,27 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Get number of processed reads from Bowtie log.
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               preseq_c_curve_outfile:
                 type: File
                 inputBinding: {}
+
             outputs:
               output:
                 type: File
                 outputBinding:
                   glob: |-
                     $(inputs.preseq_c_curve_outfile.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + '.percentage_unique_reads.txt')
-            baseCommand: percent-uniq-reads-from-preseq.sh
             stdout: |-
               $(inputs.preseq_c_curve_outfile.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + '.percentage_unique_reads.txt')
+
+            baseCommand: percent-uniq-reads-from-preseq.sh
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -1321,8 +1413,10 @@ steps:
               Help options:
                 -?, -help     print this help message 
                     -about    print about message
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               B:
                 doc: "-bam      input is in BAM format \n"
@@ -1382,15 +1476,18 @@ steps:
                 inputBinding:
                   prefix: -v
                   position: 1
+
             outputs:
               output_file:
                 type: File
                 outputBinding:
                   glob: $(inputs.output_file_basename + '.preseq_c_curve.txt')
+            stdout: $(inputs.output_file_basename + '.preseq_c_curve.txt')
+
             baseCommand:
             - preseq
             - c_curve
-            stdout: $(inputs.output_file_basename + '.preseq_c_curve.txt')
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/preseq:2.0
@@ -1413,8 +1510,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               F:
                 doc: only include reads with none of the bits set in INT set in FLAG
@@ -1487,6 +1586,7 @@ steps:
                 inputBinding:
                   prefix: -u
                   position: 1
+
             outputs:
               outfile:
                 doc: Aligned file in SAM or BAM format
@@ -1499,9 +1599,6 @@ steps:
                       suffix = inputs.suffix || suffix;
                       return inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + suffix
                     }
-            baseCommand:
-            - samtools
-            - view
             stdout: |
               ${
                  if (inputs.outfile_name) return inputs.outfile_name;
@@ -1509,6 +1606,11 @@ steps:
                  suffix = inputs.suffix || suffix;
                  return inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + suffix
               }
+
+            baseCommand:
+            - samtools
+            - view
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -1522,8 +1624,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               S:
                 doc: Input format autodetected
@@ -1544,6 +1648,7 @@ steps:
                 inputBinding:
                   prefix: -@
                   position: 1
+
             outputs:
               bam_file:
                 doc: Aligned file in BAM format
@@ -1551,12 +1656,14 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + '.bam')
+            stdout: |-
+              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + '.bam')
+
             baseCommand:
             - samtools
             - view
             - -b
-            stdout: |-
-              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + '.bam')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -1570,8 +1677,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
@@ -1597,6 +1706,7 @@ steps:
                   e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
+
             outputs:
               sorted_file:
                 doc: Sorted aligned file
@@ -1604,11 +1714,13 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+            stdout: |-
+              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             baseCommand:
             - samtools
             - sort
-            stdout: |-
-              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -1623,8 +1735,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
@@ -1650,6 +1764,7 @@ steps:
                   e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
+
             outputs:
               sorted_file:
                 doc: Sorted aligned file
@@ -1657,11 +1772,13 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+            stdout: |-
+              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             baseCommand:
             - samtools
             - sort
-            stdout: |-
-              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -1678,8 +1795,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 doc: Aligned file to be sorted with samtools
@@ -1705,6 +1824,7 @@ steps:
                   e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
+
             outputs:
               sorted_file:
                 doc: Sorted aligned file
@@ -1712,11 +1832,13 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+            stdout: |-
+              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             baseCommand:
             - samtools
             - sort
-            stdout: |-
-              $(inputs.input_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + inputs.suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -1745,10 +1867,12 @@ steps:
       class: Workflow
       cwlVersion: v1.0
       doc: ATAC-seq 04 quantification - SE
+
       requirements:
       - class: ScatterFeatureRequirement
       - class: StepInputExpressionRequirement
       - class: InlineJavascriptRequirement
+
       inputs:
         as_narrowPeak_file:
           doc: Definition narrowPeak file in AutoSql format (used in bedToBigBed)
@@ -1766,6 +1890,7 @@ steps:
         nthreads:
           type: int
           default: 1
+
       outputs:
         output_extended_peak_file:
           doc: peakshift/phantomPeak extended fragment results file
@@ -1807,6 +1932,7 @@ steps:
           doc: peakshift/phantomPeak results file
           type: File[]
           outputSource: spp/output_spp_cross_corr
+
       steps:
         count-peaks:
           in:
@@ -1818,23 +1944,27 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Counts lines in a file and returns a suffixed file with that number
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 type: File
               output_suffix:
                 type: string
                 default: .count
+
             outputs:
               output_counts:
                 type: File
                 outputBinding:
                   glob: $(inputs.input_file.path.replace(/^.*[\\\/]/, '') + inputs.output_suffix)
+            stdout: $(inputs.input_file.path.replace(/^.*[\\\/]/, '') + inputs.output_suffix)
+
             baseCommand:
             - wc
             - -l
-            stdout: $(inputs.input_file.path.replace(/^.*[\\\/]/, '') + inputs.output_suffix)
             stdin: $(inputs.input_file.path)
           out:
           - output_counts
@@ -1846,22 +1976,27 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Count number of dedup-ed reads used in peak calling
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               peak_xls_file:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               read_count_file:
                 type: File
                 outputBinding:
                   glob: |-
                     $(inputs.peak_xls_file.path.replace(/^.*[\\\/]/, '').replace(/\_peaks\.xls$/, '_read_count.txt'))
-            baseCommand: count-filtered-reads-macs2.sh
             stdout: |-
               $(inputs.peak_xls_file.path.replace(/^.*[\\\/]/, '').replace(/\_peaks\.xls$/, '_read_count.txt'))
+
+            baseCommand: count-filtered-reads-macs2.sh
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -1877,9 +2012,11 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extract mapped reads from BAM file using Samtools flagstat command
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               input_bam_file:
                 doc: Aligned BAM file to filter
@@ -1888,6 +2025,7 @@ steps:
                   position: 1
               output_suffix:
                 type: string
+
             outputs:
               output_read_count:
                 doc: Samtools Flagstat report file
@@ -1895,6 +2033,9 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+            stdout: |-
+              $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+
             baseCommand:
             - samtools
             - flagstat
@@ -1902,8 +2043,7 @@ steps:
             - position: 10000
               valueFrom: " | head -n1 | cut -f 1 -d ' '"
               shellQuote: false
-            stdout: |-
-              $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools
@@ -1917,11 +2057,13 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extracts best fragment length from SPP output text file
+
             inputs:
               input_spp_txt_file:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_best_frag_length:
                 type: float
@@ -1929,8 +2071,10 @@ steps:
                   glob: best_frag_length
                   outputEval: $(Number(self[0].contents.replace('\n', '')))
                   loadContents: true
-            baseCommand: extract-best-frag-length.sh
             stdout: best_frag_length
+
+            baseCommand: extract-best-frag-length.sh
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -1948,8 +2092,10 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Filter BAM file to only include reads overlapping with a BED file
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_bam_file:
                 doc: Aligned BAM file to filter
@@ -1962,18 +2108,21 @@ steps:
                 inputBinding:
                   prefix: -L
                   position: 2
+
             outputs:
               filtered_file:
                 doc: Filtered aligned BAM file by BED coordinates file
                 type: File
                 outputBinding:
                   glob: $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '') + '.in_peaks.bam')
+            stdout: $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '') + '.in_peaks.bam')
+
             baseCommand:
             - samtools
             - view
             - -b
             - -h
-            stdout: $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '') + '.in_peaks.bam')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/samtools:1.3
@@ -2003,8 +2152,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               format:
                 doc: |-
@@ -2277,6 +2428,7 @@ steps:
                 inputBinding:
                   prefix: --verbose
                   position: 1
+
             outputs:
               output_ext_frag_bdg_file:
                 doc: Bedgraph with extended fragment pileup.
@@ -2303,6 +2455,7 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.treatment[0].path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + '_peaks.xls')
+
             baseCommand:
             - macs2
             - callpeak
@@ -2311,6 +2464,7 @@ steps:
               position: 1
               valueFrom: $(inputs.treatment[0].path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
                 ''))
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/macs2
@@ -2342,8 +2496,10 @@ steps:
               The in.bed file must be sorted by chromosome,start,
                 to sort a bed file, use the unix sort command:
                    sort -k1,1 -k2,2n unsorted.bed > sorted.bed"
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               type:
                 doc: |
@@ -2419,15 +2575,18 @@ steps:
                 type: boolean?
                 inputBinding:
                   position: 1
+
             outputs:
               bigbed:
                 type: File
                 outputBinding:
                   glob: $(inputs.bed.path.replace(/^.*[\\\/]/, '')+ inputs.output_suffix)
+
             baseCommand: bedToBigBed
             arguments:
             - position: 4
               valueFrom: $(inputs.bed.path.replace(/^.*[\\\/]/, '') + inputs.output_suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dleehr/docker-hubutils
@@ -2445,9 +2604,11 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               control_bam:
                 doc: |-
@@ -2542,6 +2703,7 @@ steps:
                 inputBinding:
                   prefix: -x=
                   separate: false
+
             outputs:
               output_spp_cross_corr:
                 doc: peakshift/phantomPeak results summary file
@@ -2573,12 +2735,14 @@ steps:
                 outputBinding:
                   glob: |-
                     $(inputs.input_bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".spp.regionPeak")
+
             baseCommand: run_spp.R
             arguments:
             - valueFrom: |-
                 $("-out=" + inputs.input_bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".spp_cross_corr.txt")
             - valueFrom: $("-tmpdir="+runtime.tmpdir)
               shellQuote: false
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/spp
@@ -2593,6 +2757,7 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Trunk scores in ENCODE bed6+4 files
+
             inputs:
               peaks:
                 type: File
@@ -2604,18 +2769,21 @@ steps:
                 inputBinding:
                   prefix: -F
                   position: 2
+
             outputs:
               trunked_scores_peaks:
                 type: File
                 outputBinding:
                   glob: |-
                     $(inputs.peaks.path.replace(/^.*[\\\/]/, '').replace(/\.([^/.]+)$/, "\.trunked_scores\.$1"))
+            stdout: |-
+              $(inputs.peaks.path.replace(/^.*[\\\/]/, '').replace(/\.([^/.]+)$/, "\.trunked_scores\.$1"))
+
             baseCommand: awk
             arguments:
             - position: 3
               valueFrom: BEGIN{OFS=FS}$5>1000{$5=1000}{print}
-            stdout: |-
-              $(inputs.peaks.path.replace(/^.*[\\\/]/, '').replace(/\.([^/.]+)$/, "\.trunked_scores\.$1"))
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -2641,10 +2809,12 @@ steps:
       class: Workflow
       cwlVersion: v1.0
       doc: 'ATAC-seq 01 QC - reads: SE'
+
       requirements:
       - class: ScatterFeatureRequirement
       - class: StepInputExpressionRequirement
       - class: InlineJavascriptRequirement
+
       inputs:
         default_adapters_file:
           doc: Adapters file
@@ -2655,6 +2825,7 @@ steps:
         nthreads:
           doc: Number of threads.
           type: int
+
       outputs:
         output_count_raw_reads:
           type: File[]
@@ -2673,6 +2844,7 @@ steps:
           doc: FastQC reports in zip format
           type: File[]
           outputSource: fastqc/output_qc_report_file
+
       steps:
         compare_read_counts:
           in:
@@ -2686,6 +2858,7 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Compares 2 files
+
             inputs:
               brief:
                 type: boolean
@@ -2701,13 +2874,16 @@ steps:
                 type: File
                 inputBinding:
                   position: 2
+
             outputs:
               result:
                 type: File
                 outputBinding:
                   glob: stdout.txt
-            baseCommand: diff
             stdout: stdout.txt
+
+            baseCommand: diff
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -2725,6 +2901,7 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extracts read count from fastqc_data.txt
+
             inputs:
               input_basename:
                 type: string
@@ -2732,13 +2909,16 @@ steps:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_fastqc_read_count:
                 type: File
                 outputBinding:
                   glob: $(inputs.input_basename + '.fastqc-read_count.txt')
-            baseCommand: count-fastqc_data-reads.sh
             stdout: $(inputs.input_basename + '.fastqc-read_count.txt')
+
+            baseCommand: count-fastqc_data-reads.sh
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -2756,8 +2936,10 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Counts reads in a fastq file
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_basename:
                 type: string
@@ -2765,13 +2947,16 @@ steps:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_read_count:
                 type: File
                 outputBinding:
                   glob: $(inputs.input_basename + '.read_count.txt')
-            baseCommand: count-fastq-reads.sh
             stdout: $(inputs.input_basename + '.read_count.txt')
+
+            baseCommand: count-fastq-reads.sh
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -2785,20 +2970,25 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extracts the base name of a file
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_basename:
                 type: string
                 outputBinding:
                   outputEval: |-
                     $(inputs.input_file.path.substr(inputs.input_file.path.lastIndexOf('/') + 1, inputs.input_file.path.lastIndexOf('.') - (inputs.input_file.path.lastIndexOf('/') + 1)))
+
             baseCommand: echo
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -2817,6 +3007,7 @@ steps:
             cwlVersion: v1.0
             doc: |-
               Unzips a zipped fastqc report and returns the fastqc_data.txt file. Unzips the file to pipe and uses redirection
+
             inputs:
               extract_pattern:
                 type: string
@@ -2835,13 +3026,16 @@ steps:
                 inputBinding:
                   prefix: -p
                   position: 1
+
             outputs:
               output_fastqc_data_file:
                 type: File
                 outputBinding:
                   glob: $(inputs.input_basename + '.fastqc_data.txt')
-            baseCommand: unzip
             stdout: $(inputs.input_basename + '.fastqc_data.txt')
+
+            baseCommand: unzip
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/fastqc
@@ -2855,8 +3049,10 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               format:
                 type: string
@@ -2880,12 +3076,14 @@ steps:
                 inputBinding:
                   prefix: --threads
                   position: 5
+
             outputs:
               output_qc_report_file:
                 type: File
                 outputBinding:
                   glob: |-
                     $(inputs.input_fastq_file.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, '') + "_fastqc.zip")
+
             baseCommand: fastqc
             arguments:
             - prefix: --dir
@@ -2894,6 +3092,7 @@ steps:
             - prefix: -o
               position: 5
               valueFrom: $(runtime.outdir)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/fastqc
@@ -2911,6 +3110,7 @@ steps:
           run:
             class: CommandLineTool
             cwlVersion: v1.0
+
             inputs:
               default_adapters_file:
                 doc: Adapters file in fasta format
@@ -2926,15 +3126,18 @@ steps:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_custom_adapters:
                 type: File
                 outputBinding:
                   glob: $(inputs.input_basename + '.custom_adapters.fasta')
+
             baseCommand: overrepresented_sequence_extract.py
             arguments:
             - position: 3
               valueFrom: $(inputs.input_basename + '.custom_adapters.fasta')
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/overrepresented_sequence_extract:1.0
@@ -2955,10 +3158,12 @@ steps:
       class: Workflow
       cwlVersion: v1.0
       doc: ATAC-seq - Quantification
+
       requirements:
       - class: ScatterFeatureRequirement
       - class: StepInputExpressionRequirement
       - class: InlineJavascriptRequirement
+
       inputs:
         input_bam_files:
           type: File[]
@@ -2967,6 +3172,7 @@ steps:
         nthreads:
           type: int
           default: 1
+
       outputs:
         bigwig_norm_files:
           doc: signal files of pileup reads in RPKM
@@ -2976,6 +3182,7 @@ steps:
           doc: Raw reads bigWig (signal) files
           type: File[]
           outputSource: bdg2bw-raw/output_bigwig
+
       steps:
         bamcoverage:
           in:
@@ -3142,8 +3349,10 @@ steps:
                                       get only reads that map to the forward strand, use
                                       --samFlagExclude 16, where 16 is the SAM flag for
                                       reads that map to the reverse strand. (default: None)
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               MNase:
                 doc: |
@@ -3411,18 +3620,21 @@ steps:
                 inputBinding:
                   prefix: --version
                   position: 1
+
             outputs:
               output_bam_coverage:
                 type: File
                 outputBinding:
                   glob: |-
                     ${ if (inputs.outFileName) return inputs.outFileName; if (inputs.output_suffix) return inputs.bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + inputs.output_suffix; if (inputs.outFileFormat == "bedgraph") return inputs.bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".bdg"; return inputs.bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".bw"; }
+
             baseCommand: bamCoverage
             arguments:
             - prefix: --outFileName
               position: 3
               valueFrom: |-
                 ${ if (inputs.outFileName) return inputs.outFileName; if (inputs.output_suffix) return inputs.bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + inputs.output_suffix; if (inputs.outFileFormat == "bedgraph") return inputs.bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".bdg"; return inputs.bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".bw"; }
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/deeptools:3.0.1
@@ -3440,8 +3652,10 @@ steps:
             cwlVersion: v1.0
             doc: 'Tool:   bedGraphToBigWig v 4 - Convert a bedGraph file to bigWig
               format.'
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               bed_graph:
                 doc: "\tbed_graph is a four column file in the format: <chrom> <start>\
@@ -3457,17 +3671,20 @@ steps:
               output_suffix:
                 type: string
                 default: .bw
+
             outputs:
               output_bigwig:
                 type: File
                 outputBinding:
                   glob: |-
                     $(inputs.bed_graph.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+
             baseCommand: bedGraphToBigWig
             arguments:
             - position: 3
               valueFrom: |-
                 $(inputs.bed_graph.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "") + inputs.output_suffix)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/bedgraphtobigwig
@@ -3485,23 +3702,28 @@ steps:
               usage:
                  bedSort in.bed out.bed
               in.bed and out.bed may be the same.
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               bed_file:
                 doc: Bed or bedGraph file to be sorted
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               bed_file_sorted:
                 type: File
                 outputBinding:
                   glob: $(inputs.bed_file.path.replace(/^.*[\\\/]/, '') + "_sorted")
+
             baseCommand: bedSort
             arguments:
             - position: 2
               valueFrom: $(inputs.bed_file.path.replace(/^.*[\\\/]/, '') + "_sorted")
+
             hints:
               DockerRequirement:
                 dockerPull: dleehr/docker-hubutils
@@ -3605,9 +3827,11 @@ steps:
 
               	mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e \
               	"select chrom, size from hg19.chromInfo" > hg19.genome
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               '3':
                 doc: "\tCalculate coverage of 3\" positions (instead of entire interval).\n"
@@ -3735,17 +3959,20 @@ steps:
                 inputBinding:
                   prefix: -trackopts
                   position: 1
+
             outputs:
               output_bedfile:
                 type: File
                 outputBinding:
                   glob: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
                     '') + '.bdg')
+            stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
+              '') + '.bdg')
+
             baseCommand:
             - bedtools
             - genomecov
-            stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
-              '') + '.bdg')
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/bedtools
@@ -3765,10 +3992,12 @@ steps:
       class: Workflow
       cwlVersion: v1.0
       doc: 'ATAC-seq 02 trimming - reads: SE'
+
       requirements:
       - class: ScatterFeatureRequirement
       - class: StepInputExpressionRequirement
       - class: InlineJavascriptRequirement
+
       inputs:
         input_adapters_files:
           doc: Input adapters files
@@ -3790,6 +4019,7 @@ steps:
         trimmomatic_java_opts:
           doc: JVM arguments should be a quoted, space separated list
           type: string?
+
       outputs:
         output_data_fastq_trimmed_files:
           doc: Trimmed fastq files
@@ -3799,6 +4029,7 @@ steps:
           doc: Trimmed read counts of fastq files
           type: File[]
           outputSource: count_fastq_reads/output_read_count
+
       steps:
         count_fastq_reads:
           in:
@@ -3812,8 +4043,10 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Counts reads in a fastq file
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_basename:
                 type: string
@@ -3821,13 +4054,16 @@ steps:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_read_count:
                 type: File
                 outputBinding:
                   glob: $(inputs.input_basename + '.read_count.txt')
-            baseCommand: count-fastq-reads.sh
             stdout: $(inputs.input_basename + '.read_count.txt')
+
+            baseCommand: count-fastq-reads.sh
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -3841,20 +4077,25 @@ steps:
             class: CommandLineTool
             cwlVersion: v1.0
             doc: Extracts the base name of a file
+
             requirements:
               InlineJavascriptRequirement: {}
+
             inputs:
               input_file:
                 type: File
                 inputBinding:
                   position: 1
+
             outputs:
               output_basename:
                 type: string
                 outputBinding:
                   outputEval: |-
                     $(inputs.input_file.path.substr(inputs.input_file.path.lastIndexOf('/') + 1, inputs.input_file.path.lastIndexOf('.') - (inputs.input_file.path.lastIndexOf('/') + 1)))
+
             baseCommand: echo
+
             hints:
               DockerRequirement:
                 dockerPull: reddylab/workflow-utils:ggr
@@ -3898,9 +4139,11 @@ steps:
               introduced by the library preparation process.
               Trimmomatic works with FASTQ files (using phred + 33 or phred + 64 quality scores,
               depending on the Illumina pipeline used).
+
             requirements:
               InlineJavascriptRequirement: {}
               ShellCommandRequirement: {}
+
             inputs:
               avgqual:
                 doc: |
@@ -4099,6 +4342,7 @@ steps:
                 inputBinding:
                   prefix: -jar
                   position: 2
+
             outputs:
               output_log_file:
                 doc: Trimmomatic Log file.
@@ -4137,6 +4381,7 @@ steps:
                         return inputs.input_read2_fastq_file.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '') + '.unpaired.trimmed.fastq';
                       return null;
                     }
+
             baseCommand: java
             arguments:
             - position: 1
@@ -4169,6 +4414,7 @@ steps:
             - position: 11
               valueFrom: $("ILLUMINACLIP:" + inputs.input_adapters_file.path + ":"+
                 inputs.illuminaclip)
+
             hints:
               DockerRequirement:
                 dockerPull: dukegcb/trimmomatic
