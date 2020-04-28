@@ -7,6 +7,7 @@ import importlib.resources as pkg_resources
 import ruamel.yaml
 from ruamel.yaml import scalarstring
 from ruamel.yaml.compat import StringIO
+from ruamel.yaml.comments import CommentedMap
 
 from cwlformat.version import __version__
 
@@ -41,13 +42,23 @@ def format_node(cwl: Union[dict, list, str], node_path=None):
             return cwl
 
     elif isinstance(cwl, dict):
-        return {k: format_node(v, node_path + [k]) for k, v in reorder_node(cwl, node_path)}
+        _fmt_cwl = CommentedMap([
+            (k, format_node(v, node_path + [k])) for k, v in reorder_node(cwl, node_path)])
+        if _fmt_cwl.get("class") in ["CommandLineTool", "ExpressionTool", "Workflow"]:
+            add_space_between_main_sections(_fmt_cwl)
+        return _fmt_cwl
 
     elif isinstance(cwl, list):
         return [format_node(v, node_path) for v in cwl]
 
     else:
         return cwl
+
+
+def add_space_between_main_sections(cwl: CommentedMap):
+    for k in cwl.keys():
+        if k in ["inputs", "outputs", "steps", "requirements", "hints", "baseCommand"]:
+            cwl.yaml_set_comment_before_after_key(key=k, before="\n")
 
 
 def reorder_node(cwl: dict, node_path: list) -> dict:

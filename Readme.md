@@ -38,6 +38,15 @@ formatted_text = cwl_format(unformatted_text)
   present in this file ("free fields") are printed after the pinned fields 
   and ordered alphabetically.
 
+- A single blank line is added before the following fields if the parent 
+  structure is a process.
+  - inputs
+  - outputs
+  - steps
+  - requirements
+  - hints
+  - baseCommand
+
 - The pinned fields are defined in [this YAML file][spec]. 
 
 - Specific pinned field orderings are available for CommandLineTool, 
