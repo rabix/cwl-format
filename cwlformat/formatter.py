@@ -80,10 +80,14 @@ def infer_type(cwl: dict, node_path: list):
 
 def cwl_format(raw_cwl: str) -> str:
     as_dict = yaml.load(raw_cwl)
+    return leading_comment_lines(raw_cwl) + stringify_dict(as_dict)
+
+
+def stringify_dict(as_dict: dict) -> str:
     as_dict = format_node(as_dict, node_path=[])
     stream = StringIO()
     yaml.dump(as_dict, stream)
-    return leading_comment_lines(raw_cwl) + stream.getvalue()
+    return stream.getvalue()
 
 
 def main():
