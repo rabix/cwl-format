@@ -2,6 +2,7 @@
 
 from typing import Union
 import sys
+import pathlib
 import importlib.resources as pkg_resources
 
 import ruamel.yaml
@@ -98,8 +99,14 @@ def main():
         description=f"Rabix/cwl-format v{__version__}\n"
                     "A very opinionated code formatter for CWL")
     parser.add_argument("cwlfile")
+    parser.add_argument("--inplace", action="store_true")
     args = parser.parse_args()
-    sys.stdout.write(cwl_format(open(args.cwlfile, "r").read()))
+    fp = pathlib.Path(args.cwlfile)
+    formatted = cwl_format(fp.read_text())
+    if args.inplace:
+        fp.write_text(formatted)
+    else:
+        sys.stdout.write(formatted)
 
 
 if __name__ == "__main__":
