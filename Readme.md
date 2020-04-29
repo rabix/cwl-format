@@ -20,12 +20,19 @@ cwl-format unformatted.cwl > formatted.cwl
 Use programmatically in Python by doing
 
 ```python
-
 from cwlformat.formatter import cwl_format
 
 formatted_text = cwl_format(unformatted_text)
 ```
 
+or
+
+```python
+from cwlformat.formatter import stringify_dict
+
+as_dict = load_yaml(...)
+formatted_str = stringify_dict(as_dict)
+```
 
 ## Rules
 
@@ -72,3 +79,15 @@ and the files named `formatted-*` are the corresponding formatted documents. The
 are a mixture of YAML and JSON input files. Formatted files are always YAML.
 
 [tests]: https://github.com/rabix/cwl-format/tree/master/tests/cwl
+
+
+# Exploder
+
+This takes as input a packed workflow (workflow with all steps in lined) and splits it
+recursively into parts.
+
+```
+cwl-explode formatted-atac-seq-pipeline.cwl expected-exploded-atac-seq.cwl
+```
+
+Results in the 53 workflows shown in the [tests directory](https://github.com/rabix/cwl-format/tree/master/tests/cwl)

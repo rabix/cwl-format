@@ -24,7 +24,8 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     entry_points={
         'console_scripts': [
-            'cwl-format=cwlformat.formatter:main'
+            'cwl-format=cwlformat.formatter:main',
+            'cwl-explode=cwlformat.explode:main'
         ],
     },
     include_package_data=True,
