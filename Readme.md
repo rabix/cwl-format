@@ -40,6 +40,9 @@ formatted_str = stringify_dict(as_dict)
   before the actual CWL code are preserved. All other comments are lost.
   **Do not use this if all comments in the YAML are important to you**. 
 
+- If the first line does not start with `#!/usr/bin/env ` the line
+  `#!/usr/bin/env cwl-runner` is added to the top of the file.
+
 - All CWL fields are ordered systematically. The field order for specific 
   fields have a defined precedence ("pinned fields"). Any fields not 
   present in this file ("free fields") are printed after the pinned fields 

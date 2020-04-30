@@ -18,6 +18,9 @@ Literal = ruamel.yaml.scalarstring.LiteralScalarString
 
 key_order_dict = yaml.load(pkg_resources.read_text("cwlformat", "keyorder.yml"))
 
+hash_bang = "#!/usr/bin/env cwl-runner\n\n"
+hash_bang_pre = "#!/usr/bin/env "
+
 
 def leading_comment_lines(raw_cwl: str):
 
@@ -31,6 +34,9 @@ def leading_comment_lines(raw_cwl: str):
             top_comment += [_line]
         else:
             break
+
+    if len(top_comment) == 0 or not top_comment[0].startswith(hash_bang_pre):
+        top_comment = [hash_bang] + top_comment
 
     return "".join(top_comment)
 

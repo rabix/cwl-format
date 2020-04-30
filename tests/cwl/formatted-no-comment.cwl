@@ -1,8 +1,5 @@
 #!/usr/bin/env cwl-runner
 
-
-# Top comment is preserved
-
 class: CommandLineTool
 cwlVersion: v1.0
 
