@@ -1,6 +1,7 @@
 # CWL Format
 
 [![Tests](https://github.com/rabix/cwl-format/workflows/Tests/badge.svg)](https://github.com/rabix/cwl-format/actions?query=workflow%3ATests)
+[![PyPI version](https://badge.fury.io/py/cwlformat.svg)](https://pypi.org/project/cwlformat/)
 
 CWL Format is a specification and a reference implementation for
 a very opinionated CWL code formatter.
