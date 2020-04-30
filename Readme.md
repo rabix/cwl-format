@@ -84,7 +84,7 @@ are a mixture of YAML and JSON input files. Formatted files are always YAML.
 [tests]: https://github.com/rabix/cwl-format/tree/master/tests/cwl
 
 
-# Exploder
+# CWL Exploder
 
 This takes as input a packed workflow (workflow with all steps in lined) and splits it
 recursively into parts.
@@ -93,4 +93,5 @@ recursively into parts.
 cwl-explode formatted-atac-seq-pipeline.cwl expected-exploded-atac-seq.cwl
 ```
 
-Results in the 53 workflows shown in the [tests directory](https://github.com/rabix/cwl-format/tree/master/tests/cwl)
+Results in the [exploded parent workflow](https://github.com/rabix/cwl-format/blob/master/tests/cwl/expected-exploded-atac-seq.cwl)
+and [52 sub-components](https://github.com/rabix/cwl-format/tree/master/tests/cwl/expected-exploded-atac-seq.cwl.steps)

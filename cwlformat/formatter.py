@@ -105,7 +105,8 @@ def main():
         description=f"Rabix/cwl-format v{__version__}\n"
                     "A very opinionated code formatter for CWL")
     parser.add_argument("cwlfile")
-    parser.add_argument("--inplace", action="store_true")
+    parser.add_argument("--inplace", action="store_true",
+                        help="Instead of writing formatted code to stdout, overwrite original file")
     args = parser.parse_args()
     fp = pathlib.Path(args.cwlfile)
     formatted = cwl_format(fp.read_text())
