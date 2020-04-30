@@ -1,6 +1,6 @@
 # CWL Format
 
-![Tests](https://github.com/rabix/cwl-format/workflows/Tests/badge.svg)
+[![Tests](https://github.com/rabix/cwl-format/workflows/Tests/badge.svg)](https://github.com/rabix/cwl-format/actions?query=workflow%3ATests)
 
 CWL Format is a specification and a reference implementation for
 a very opinionated CWL code formatter.
