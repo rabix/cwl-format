@@ -3,20 +3,19 @@
 from typing import Union
 import sys
 import pathlib
-import importlib.resources as pkg_resources
 
 import ruamel.yaml
 from ruamel.yaml import scalarstring
 from ruamel.yaml.compat import StringIO
 from ruamel.yaml.comments import CommentedMap
 
+from cwlformat.keyorder import KEYS as key_order_dict
+
 from cwlformat.version import __version__
 
 yaml = ruamel.yaml.YAML()
 yaml.indent(mapping=2, sequence=2, offset=0)
 Literal = ruamel.yaml.scalarstring.LiteralScalarString
-
-key_order_dict = yaml.load(pkg_resources.read_text("cwlformat", "keyorder.yml"))
 
 hash_bang = "#!/usr/bin/env cwl-runner\n\n"
 hash_bang_pre = "#!/usr/bin/env "
