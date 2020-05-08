@@ -20,7 +20,7 @@ setup(
     long_description_content_type="text/markdown",
     author='Kaushik Ghose',
     author_email='kaushik.ghose@sbgenomics.com',
-    url='https://github.com/kaushik-work/cwlformat',
+    url='https://github.com/rabix/cwl-format',
     packages=find_packages(exclude=('tests', 'docs')),
     entry_points={
         'console_scripts': [
