@@ -3,7 +3,11 @@
 from typing import Union
 import sys
 import pathlib
-import importlib.resources as pkg_resources
+try:
+    from importlib.resources import read_text
+except ImportError:
+    # Python 2.x backport
+    from importlib_resources import read_text
 
 import ruamel.yaml
 from ruamel.yaml import scalarstring
@@ -16,7 +20,7 @@ yaml = ruamel.yaml.YAML()
 yaml.indent(mapping=2, sequence=2, offset=0)
 Literal = ruamel.yaml.scalarstring.LiteralScalarString
 
-key_order_dict = yaml.load(pkg_resources.read_text("cwlformat", "keyorder.yml"))
+key_order_dict = yaml.load(read_text("cwlformat", "keyorder.yml"))
 
 hash_bang = "#!/usr/bin/env cwl-runner\n\n"
 hash_bang_pre = "#!/usr/bin/env "
