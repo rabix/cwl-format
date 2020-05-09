@@ -6,7 +6,7 @@ import pathlib
 try:
     from importlib.resources import read_text
 except ImportError:
-    # Python 2.x backport
+    # Python 3.6 fallback: https://importlib-resources.readthedocs.io/en/latest/
     from importlib_resources import read_text
 
 import ruamel.yaml
