@@ -47,6 +47,7 @@ CommandLineTool:
   - cwlVersion
   - label
   - doc
+  - $namespaces
   - requirements
   - inputs
   - outputs
@@ -78,6 +79,7 @@ Workflow:
   - cwlVersion
   - label
   - doc
+  - $namespaces
   - requirements
   - inputs
   - outputs
