@@ -13,14 +13,14 @@ readme = pathlib.Path(current_path, "Readme.md").read_text()
 
 setup(
     name='cwlformat',
-    python_requires='>=3.7.0',
+    python_requires='>=3.6.0',
     version=version,
     description='A prettifier for CWL code',
     long_description=readme,
     long_description_content_type="text/markdown",
     author='Kaushik Ghose',
     author_email='kaushik.ghose@sbgenomics.com',
-    url='https://github.com/kaushik-work/cwlformat',
+    url='https://github.com/rabix/cwl-format',
     packages=find_packages(exclude=('tests', 'docs')),
     entry_points={
         'console_scripts': [
@@ -31,5 +31,6 @@ setup(
     include_package_data=True,
     install_requires=[
         "ruamel.yaml >= 0.15.77",
-    ]
+    ],
+    extras_require={':python_version<"3.7"': ['importlib-resources']}, 
 )
