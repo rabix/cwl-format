@@ -24,16 +24,15 @@ hash_bang_pre = "#!/usr/bin/env "
 
 def leading_comment_lines(raw_cwl: str):
 
-    if len(raw_cwl) > 0 and raw_cwl.lstrip()[0] == "{":
-        return ""
-
     top_comment = []
-    for _line in raw_cwl.splitlines(keepends=True):
-        line = _line.strip()
-        if line == "" or line[0] == "#":
-            top_comment += [_line]
-        else:
-            break
+
+    if len(raw_cwl) > 0 and raw_cwl.lstrip()[0] != "{":
+        for _line in raw_cwl.splitlines(keepends=True):
+            line = _line.strip()
+            if line == "" or line[0] == "#":
+                top_comment += [_line]
+            else:
+                break
 
     if len(top_comment) == 0 or not top_comment[0].startswith(hash_bang_pre):
         top_comment = [hash_bang] + top_comment
