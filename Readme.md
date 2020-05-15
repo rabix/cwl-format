@@ -18,6 +18,13 @@ pip install cwlformat
 cwl-format unformatted.cwl > formatted.cwl
 ```
 
+If you don't have a > py3.6 environment, you can use `pipx`:
+```
+pip install pipx  # from your < py3.6 environment
+pipx ensurepath # ensures CLI application directory is on your $PATH
+pipx install cwlformat --python python3.7 #tells pipx to set up a Py3.7 env for this app
+```
+
 Use programmatically in Python by doing
 
 ```python
@@ -31,7 +38,7 @@ or
 ```python
 from cwlformat.formatter import stringify_dict
 
-as_dict = load_yaml(...)
+as_dict = load_yaml(unformatted_text)
 formatted_str = stringify_dict(as_dict)
 ```
 
