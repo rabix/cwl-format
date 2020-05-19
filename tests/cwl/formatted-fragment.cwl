@@ -1,3 +1,5 @@
+#!/usr/bin/env cwl-runner
+
 'A: this should go first':
 - what
 - a

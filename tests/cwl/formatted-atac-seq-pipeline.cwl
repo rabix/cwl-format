@@ -1,7 +1,11 @@
+#!/usr/bin/env cwl-runner
+
 class: Workflow
 cwlVersion: v1.0
 label: ATAC-seq-pipeline-se
 doc: 'ATAC-seq pipeline - reads: SE'
+$namespaces:
+  sbg: https://sevenbridges.com
 
 requirements:
 - class: ScatterFeatureRequirement
@@ -4425,8 +4429,6 @@ steps:
     - output_trimmed_fastq_read_count
 id: |-
   https://api.sbgenomics.com/v2/apps/kghosesbg/sbpla-31744/ATAC-seq-pipeline-se/2/raw/
-$namespaces:
-  sbg: https://sevenbridges.com
 sbg:appVersion:
 - v1.0
 sbg:content_hash: ad9474546d1d7aba5aa20e3c7a03b5429e5f8ec1d18be92cbab7315600a6bce48
