@@ -1,7 +1,7 @@
 #!/usr/bin/env other-runner
 
-class: CommandLineTool
 cwlVersion: v1.0
+class: CommandLineTool
 
 requirements:
   InlineJavascriptRequirement: {}

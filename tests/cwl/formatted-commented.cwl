@@ -3,8 +3,8 @@
 
 # Top comment is preserved
 
-class: CommandLineTool
 cwlVersion: v1.0
+class: CommandLineTool
 
 requirements:
   InlineJavascriptRequirement: {}

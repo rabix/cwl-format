@@ -1,5 +1,7 @@
-class: CommandLineTool
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: CommandLineTool
 doc: |
   Trimmomatic is a fast, multithreaded command line tool that can be used to trim and crop
   Illumina (FASTQ) data as well as to remove adapters. These adapters can pose a real problem

@@ -1,5 +1,7 @@
-class: CommandLineTool
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: CommandLineTool
 doc: Count number of dedup-ed reads used in peak calling
 
 requirements:

@@ -1,5 +1,7 @@
-class: CommandLineTool
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: CommandLineTool
 doc: Get number of processed reads from Bowtie log.
 
 requirements:

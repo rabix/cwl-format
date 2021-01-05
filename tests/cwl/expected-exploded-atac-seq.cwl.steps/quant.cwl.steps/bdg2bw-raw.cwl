@@ -1,5 +1,7 @@
-class: CommandLineTool
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: CommandLineTool
 doc: 'Tool:   bedGraphToBigWig v 4 - Convert a bedGraph file to bigWig format.'
 
 requirements:

@@ -1,5 +1,7 @@
-class: CommandLineTool
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: CommandLineTool
 doc: |-
   Unzips a zipped fastqc report and returns the fastqc_data.txt file. Unzips the file to pipe and uses redirection
 

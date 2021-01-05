@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 
-class: Workflow
 cwlVersion: v1.0
+class: Workflow
 label: ATAC-seq-pipeline-se
 doc: 'ATAC-seq pipeline - reads: SE'
 $namespaces:
@@ -186,8 +186,8 @@ steps:
       picard_jar_path: picard_jar_path
       picard_java_opts: picard_java_opts
     run:
-      class: Workflow
       cwlVersion: v1.0
+      class: Workflow
       doc: 'ATAC-seq 03 mapping - reads: SE'
 
       requirements:
@@ -273,8 +273,8 @@ steps:
             bam: index_bams/indexed_file
           scatter: bam
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InitialWorkDirRequirement:
@@ -325,8 +325,8 @@ steps:
           - output_filename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -468,8 +468,8 @@ steps:
             input_bam_files: filtered2sorted/sorted_file
             input_output_filenames: extract_basename_2/output_path
           run:
-            class: Workflow
             cwlVersion: v1.0
+            class: Workflow
             doc: ChIP-seq - map - PCR Bottleneck Coefficients
 
             requirements:
@@ -497,8 +497,8 @@ steps:
                   ibam: input_bam_files
                 scatter: ibam
                 run:
-                  class: CommandLineTool
                   cwlVersion: v1.0
+                  class: CommandLineTool
                   doc: |-
                     Tool:    bedtools genomecov (aka genomeCoverageBed)
                     Version: v2.25.0
@@ -749,8 +749,8 @@ steps:
                 - output_filename
                 scatterMethod: dotproduct
                 run:
-                  class: CommandLineTool
                   cwlVersion: v1.0
+                  class: CommandLineTool
                   doc: Compute PCR Bottleneck Coeficient from BedGraph file.
 
                   inputs:
@@ -780,8 +780,8 @@ steps:
             input_file: input_fastq_files
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extracts the base name of a file
 
             requirements:
@@ -812,8 +812,8 @@ steps:
             file_path: extract_basename_1/output_basename
           scatter: file_path
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extracts the base name of a file
 
             inputs:
@@ -844,8 +844,8 @@ steps:
           - output_filename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -895,8 +895,8 @@ steps:
           scatter:
           - input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -951,8 +951,8 @@ steps:
             input_file: sort_bams/sorted_file
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InitialWorkDirRequirement:
@@ -993,8 +993,8 @@ steps:
           scatter:
           - input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InitialWorkDirRequirement:
@@ -1035,8 +1035,8 @@ steps:
           scatter:
           - input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InitialWorkDirRequirement:
@@ -1076,8 +1076,8 @@ steps:
             input_file: filtered2sorted/sorted_file
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InitialWorkDirRequirement:
@@ -1119,8 +1119,8 @@ steps:
               valueFrom: .mapped_and_filtered.read_count.txt
           scatter: input_bam_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extract mapped reads from BAM file using Samtools flagstat command
 
             requirements:
@@ -1164,8 +1164,8 @@ steps:
             bowtie_log: bowtie-se/output_bowtie_log
           scatter: bowtie_log
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Get number of processed reads from Bowtie log.
 
             requirements:
@@ -1204,8 +1204,8 @@ steps:
           - output_filename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1302,8 +1302,8 @@ steps:
                 ${return inputs.idxstats.basename.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '').replace(/\.[^/.]+$/, '').replace(/\.[^/.]+$/, '.mitochondrial_percentage.txt')}
           scatter: idxstats
           run:
-            class: ExpressionTool
             cwlVersion: v1.0
+            class: ExpressionTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1360,8 +1360,8 @@ steps:
             preseq_c_curve_outfile: preseq-c-curve/output_file
           scatter: preseq_c_curve_outfile
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Get number of processed reads from Bowtie log.
 
             requirements:
@@ -1398,8 +1398,8 @@ steps:
           - output_file_basename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: |-
               Usage: c_curve [OPTIONS] <sorted-bed-file>
 
@@ -1512,8 +1512,8 @@ steps:
           scatter:
           - input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1626,8 +1626,8 @@ steps:
             nthreads: nthreads
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1679,8 +1679,8 @@ steps:
             nthreads: nthreads
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1737,8 +1737,8 @@ steps:
           scatter:
           - input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1797,8 +1797,8 @@ steps:
           scatter:
           - input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1868,8 +1868,8 @@ steps:
       input_genome_sizes: genome_sizes_file
       nthreads: nthreads_peakcall
     run:
-      class: Workflow
       cwlVersion: v1.0
+      class: Workflow
       doc: ATAC-seq 04 quantification - SE
 
       requirements:
@@ -1945,8 +1945,8 @@ steps:
               valueFrom: .peak_count.within_replicate.txt
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Counts lines in a file and returns a suffixed file with that number
 
             requirements:
@@ -1977,8 +1977,8 @@ steps:
             peak_xls_file: peak-calling/output_peak_xls_file
           scatter: peak_xls_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Count number of dedup-ed reads used in peak calling
 
             requirements:
@@ -2013,8 +2013,8 @@ steps:
               valueFrom: .read_count.within_replicate.txt
           scatter: input_bam_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extract mapped reads from BAM file using Samtools flagstat command
 
             requirements:
@@ -2058,8 +2058,8 @@ steps:
             input_spp_txt_file: spp/output_spp_cross_corr
           scatter: input_spp_txt_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extracts best fragment length from SPP output text file
 
             inputs:
@@ -2093,8 +2093,8 @@ steps:
           - input_bedfile
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Filter BAM file to only include reads overlapping with a BED file
 
             requirements:
@@ -2154,8 +2154,8 @@ steps:
           - treatment
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -2486,8 +2486,8 @@ steps:
             genome_sizes: input_genome_sizes
           scatter: bed
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: |
               "bedToBigBed v. 2.7 - Convert bed file to bigBed. (BigBed version: 4)
               usage:
@@ -2606,8 +2606,8 @@ steps:
           - input_bam
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -2758,8 +2758,8 @@ steps:
             peaks: peak-calling/output_peak_file
           scatter: peaks
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Trunk scores in ENCODE bed6+4 files
 
             inputs:
@@ -2810,8 +2810,8 @@ steps:
       input_fastq_files: input_fastq_files
       nthreads: nthreads_qc
     run:
-      class: Workflow
       cwlVersion: v1.0
+      class: Workflow
       doc: 'ATAC-seq 01 QC - reads: SE'
 
       requirements:
@@ -2859,8 +2859,8 @@ steps:
           - file2
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Compares 2 files
 
             inputs:
@@ -2902,8 +2902,8 @@ steps:
           - input_basename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extracts read count from fastqc_data.txt
 
             inputs:
@@ -2937,8 +2937,8 @@ steps:
           - input_basename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Counts reads in a fastq file
 
             requirements:
@@ -2971,8 +2971,8 @@ steps:
             input_file: input_fastq_files
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extracts the base name of a file
 
             requirements:
@@ -3007,8 +3007,8 @@ steps:
           - input_basename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: |-
               Unzips a zipped fastqc report and returns the fastqc_data.txt file. Unzips the file to pipe and uses redirection
 
@@ -3051,8 +3051,8 @@ steps:
             threads: nthreads
           scatter: input_fastq_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -3112,8 +3112,8 @@ steps:
           - input_basename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
 
             inputs:
               default_adapters_file:
@@ -3159,8 +3159,8 @@ steps:
       input_genome_sizes: genome_sizes_file
       nthreads: nthreads_quant
     run:
-      class: Workflow
       cwlVersion: v1.0
+      class: Workflow
       doc: ATAC-seq - Quantification
 
       requirements:
@@ -3202,8 +3202,8 @@ steps:
               valueFrom: .rpkm.bw
           scatter: bam
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: |
               usage: An example usage is:$ bamCoverage -b reads.bam -o coverage.bw
 
@@ -3652,8 +3652,8 @@ steps:
               valueFrom: .raw.bw
           scatter: bed_graph
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: 'Tool:   bedGraphToBigWig v 4 - Convert a bedGraph file to bigWig
               format.'
 
@@ -3699,8 +3699,8 @@ steps:
             bed_file: bedtools_genomecov/output_bedfile
           scatter: bed_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: |
               bedSort - Sort a .bed file by chrom,chromStart
               usage:
@@ -3741,8 +3741,8 @@ steps:
             ibam: input_bam_files
           scatter: ibam
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: |-
               Tool:    bedtools genomecov (aka genomeCoverageBed)
               Version: v2.25.0
@@ -3993,8 +3993,8 @@ steps:
       trimmomatic_jar_path: trimmomatic_jar_path
       trimmomatic_java_opts: trimmomatic_java_opts
     run:
-      class: Workflow
       cwlVersion: v1.0
+      class: Workflow
       doc: 'ATAC-seq 02 trimming - reads: SE'
 
       requirements:
@@ -4044,8 +4044,8 @@ steps:
           - input_basename
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Counts reads in a fastq file
 
             requirements:
@@ -4078,8 +4078,8 @@ steps:
             input_file: trimmomatic/output_read1_trimmed_file
           scatter: input_file
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: Extracts the base name of a file
 
             requirements:
@@ -4131,8 +4131,8 @@ steps:
           - input_adapters_file
           scatterMethod: dotproduct
           run:
-            class: CommandLineTool
             cwlVersion: v1.0
+            class: CommandLineTool
             doc: |
               Trimmomatic is a fast, multithreaded command line tool that can be used to trim and crop
               Illumina (FASTQ) data as well as to remove adapters. These adapters can pose a real problem

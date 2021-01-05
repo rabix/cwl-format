@@ -1,5 +1,7 @@
-class: CommandLineTool
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: CommandLineTool
 doc: |-
   Tool:    bedtools genomecov (aka genomeCoverageBed)
   Version: v2.25.0

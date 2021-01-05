@@ -1,5 +1,7 @@
-class: CommandLineTool
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: CommandLineTool
 doc: |
   "bedToBigBed v. 2.7 - Convert bed file to bigBed. (BigBed version: 4)
   usage:

@@ -1,5 +1,7 @@
-class: Workflow
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
+class: Workflow
 doc: 'ATAC-seq 02 trimming - reads: SE'
 
 requirements:
