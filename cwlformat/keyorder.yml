@@ -43,8 +43,8 @@ generic-ordering:
 
 
 CommandLineTool:
-  - class
   - cwlVersion
+  - class
   - label
   - doc
   - $namespaces
@@ -62,8 +62,8 @@ CommandLineTool:
 
 
 ExpressionTool:
-  - class
   - cwlVersion
+  - class
   - label
   - doc
   - requirements
@@ -75,8 +75,8 @@ ExpressionTool:
 
 
 Workflow:
-  - class
   - cwlVersion
+  - class
   - label
   - doc
   - $namespaces
