@@ -1,14 +1,14 @@
 # Copyright (c) 2020 Seven Bridges
 # Given a cwl dict, if it is a workflow, split out any inlined steps into their own files
 
-from typing import Tuple, List
+from typing import List
 import pathlib
 import sys
 
 import ruamel.yaml
 
 from .version import __version__
-from .formatter import stringify_dict
+from .formatter import stringify_dict, leading_comment_lines
 
 
 yaml = ruamel.yaml.YAML()
@@ -24,7 +24,7 @@ class CWLProcess:
 
     def save(self):
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
-        self.file_path.write_text(stringify_dict(self.cwl))
+        self.file_path.write_text(leading_comment_lines("") + stringify_dict(self.cwl))
 
 
 def explode(cwl: CWLProcess) -> List[CWLProcess]:
