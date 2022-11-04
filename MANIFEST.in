@@ -1,1 +1,2 @@
 include cwlformat/keyorder.yml
+include Readme.md
