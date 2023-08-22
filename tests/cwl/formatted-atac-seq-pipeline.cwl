@@ -594,15 +594,15 @@ steps:
 
                   inputs:
                     '3':
-                      doc: "\tCalculate coverage of 3\" positions (instead of entire\
-                        \ interval).\n"
+                      doc: "\tCalculate coverage of 3\" positions (instead of entire
+                        interval).\n"
                       type: boolean?
                       inputBinding:
                         prefix: '-3'
                         position: 1
                     '5':
-                      doc: "\tCalculate coverage of 5\" positions (instead of entire\
-                        \ interval).\n"
+                      doc: "\tCalculate coverage of 5\" positions (instead of entire
+                        interval).\n"
                       type: boolean?
                       inputBinding:
                         prefix: '-5'
@@ -650,8 +650,8 @@ steps:
                         prefix: -g
                         position: 3
                     ibam:
-                      doc: "\tThe input file is in BAM format.\nNote: BAM _must_ be\
-                        \ sorted by position\n"
+                      doc: "\tThe input file is in BAM format.\nNote: BAM _must_ be
+                        sorted by position\n"
                       type: File
                       inputBinding:
                         prefix: -ibam
@@ -1430,15 +1430,15 @@ steps:
                   prefix: -B
                   position: 1
               H:
-                doc: "-hist     input is a text file containing the observed histogram\
-                  \ \n"
+                doc: "-hist     input is a text file containing the observed histogram
+                  \n"
                 type: File?
                 inputBinding:
                   prefix: -H
                   position: 1
               V:
-                doc: "-vals     input is a text file containing only the observed\
-                  \ counts \n"
+                doc: "-vals     input is a text file containing only the observed
+                  counts \n"
                 type: File?
                 inputBinding:
                   prefix: -V
@@ -2533,8 +2533,8 @@ steps:
                 inputBinding:
                   position: 2
               blockSize:
-                doc: "-blockSize=N - Number of items to bundle in r-tree.  Default\
-                  \ 256\n"
+                doc: "-blockSize=N - Number of items to bundle in r-tree.  Default
+                  256\n"
                 type: int?
                 inputBinding:
                   prefix: -blockSize=
@@ -2558,8 +2558,8 @@ steps:
                 inputBinding:
                   position: 3
               itemsPerSlot:
-                doc: "-itemsPerSlot=N - Number of data points bundled at lowest level.\
-                  \ Default 512\n"
+                doc: "-itemsPerSlot=N - Number of data points bundled at lowest level.
+                  Default 512\n"
                 type: int?
                 inputBinding:
                   prefix: -itemsPerSlot=
@@ -3612,8 +3612,8 @@ steps:
                   prefix: --smoothLength
                   position: 1
               verbose:
-                doc: "--verbose         \nSet to see processing messages. (default:\
-                  \ False)\n"
+                doc: "--verbose         \nSet to see processing messages. (default:
+                  False)\n"
                 type: boolean?
                 inputBinding:
                   prefix: --verbose
@@ -3662,8 +3662,8 @@ steps:
 
             inputs:
               bed_graph:
-                doc: "\tbed_graph is a four column file in the format: <chrom> <start>\
-                  \ <end> <value>\n"
+                doc: "\tbed_graph is a four column file in the format: <chrom> <start>
+                  <end> <value>\n"
                 type: File
                 inputBinding:
                   position: 1
@@ -3892,8 +3892,8 @@ steps:
                   prefix: -g
                   position: 3
               ibam:
-                doc: "\tThe input file is in BAM format.\nNote: BAM _must_ be sorted\
-                  \ by position\n"
+                doc: "\tThe input file is in BAM format.\nNote: BAM _must_ be sorted
+                  by position\n"
                 type: File
                 inputBinding:
                   prefix: -ibam
