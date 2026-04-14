@@ -16,7 +16,7 @@ def test_formatting_battery():
         formatted_cwl = cwl_format(raw_name.open("r").read())
         expected_raw_cwl = expected_name.open("r").read()
 
-        assert formatted_cwl == expected_raw_cwl
+        assert formatted_cwl == expected_raw_cwl, raw_name
 
 
 def test_node_conservation():

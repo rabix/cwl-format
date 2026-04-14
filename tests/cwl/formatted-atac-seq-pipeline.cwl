@@ -148,7 +148,8 @@ outputs:
     type: File[]
     outputSource: qc/output_count_raw_reads
   qc_diff_counts:
-    doc: Diff file between number of raw reads and number of reads counted by FASTQC,
+    doc: Diff file between number of raw reads and number of reads counted by 
+      FASTQC,
     type: File[]
     outputSource: qc/output_diff_counts
   qc_fastqc_data_files:
@@ -365,7 +366,8 @@ steps:
                 - ^^.rev.2.ebwt
                 inputBinding:
                   position: 9
-                  valueFrom: $(self.path.split('.').splice(0,self.path.split('.').length-2).join("."))
+                  valueFrom: 
+                    $(self.path.split('.').splice(0,self.path.split('.').length-2).join("."))
               input_fastq_file:
                 doc: Query input FASTQ file.
                 type: File
@@ -407,7 +409,8 @@ steps:
                   prefix: --seedmms
                   position: 1
               strata:
-                doc: Hits in sub-optimal strata aren't reported (requires --best)
+                doc: Hits in sub-optimal strata aren't reported (requires 
+                  --best)
                 type: boolean
                 default: true
                 inputBinding:
@@ -726,10 +729,10 @@ steps:
                     output_bedfile:
                       type: File
                       outputBinding:
-                        glob: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
-                          '') + '.bdg')
-                  stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
-                    '') + '.bdg')
+                        glob: $(inputs.ibam.path.replace(/^.*[\\\/]/, 
+                          '').replace(/\.[^/.]+$/, '') + '.bdg')
+                  stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, 
+                    '').replace(/\.[^/.]+$/, '') + '.bdg')
 
                   baseCommand:
                   - bedtools
@@ -770,7 +773,8 @@ steps:
 
                   baseCommand:
                   - awk
-                  - $4==1 {N1 += $3 - $2}; $4>=1 {Nd += $3 - $2} END {print N1/Nd}
+                  - $4==1 {N1 += $3 - $2}; $4>=1 {Nd += $3 - $2} END {print 
+                    N1/Nd}
                 out:
                 - pbc
           out:
@@ -922,8 +926,8 @@ steps:
                   prefix: -@
                   position: 1
               suffix:
-                doc: suffix of the transformed SAM/BAM file (including extension,
-                  e.g. .filtered.sam)
+                doc: suffix of the transformed SAM/BAM file (including 
+                  extension, e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
 
@@ -1121,7 +1125,8 @@ steps:
           run:
             cwlVersion: v1.0
             class: CommandLineTool
-            doc: Extract mapped reads from BAM file using Samtools flagstat command
+            doc: Extract mapped reads from BAM file using Samtools flagstat 
+              command
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1181,8 +1186,10 @@ steps:
               output:
                 type: File
                 outputBinding:
-                  glob: $(inputs.bowtie_log.path.replace(/^.*[\\\/]/, '') + '.read_count.mapped')
-            stdout: $(inputs.bowtie_log.path.replace(/^.*[\\\/]/, '') + '.read_count.mapped')
+                  glob: $(inputs.bowtie_log.path.replace(/^.*[\\\/]/, '') + 
+                    '.read_count.mapped')
+            stdout: $(inputs.bowtie_log.path.replace(/^.*[\\\/]/, '') + 
+              '.read_count.mapped')
 
             baseCommand: read-count-from-bowtie-log.sh
 
@@ -1221,8 +1228,8 @@ steps:
                   position: 5
                   separate: false
               input_file:
-                doc: One or more input SAM or BAM files to analyze. Must be coordinate
-                  sorted.
+                doc: One or more input SAM or BAM files to analyze. Must be 
+                  coordinate sorted.
                 type: File
                 inputBinding:
                   position: 4
@@ -1277,10 +1284,12 @@ steps:
             - position: 3
               valueFrom: MarkDuplicates
             - position: 5
-              valueFrom: $('OUTPUT=' + inputs.output_filename + '.' + inputs.output_suffix)
+              valueFrom: $('OUTPUT=' + inputs.output_filename + '.' + 
+                inputs.output_suffix)
               shellQuote: false
             - position: 5
-              valueFrom: $('METRICS_FILE='+inputs.output_filename + '.' + inputs.metrics_suffix)
+              valueFrom: $('METRICS_FILE='+inputs.output_filename + '.' + 
+                inputs.metrics_suffix)
               shellQuote: false
             - position: 5
               valueFrom: $('TMP_DIR='+runtime.tmpdir)
@@ -1430,8 +1439,8 @@ steps:
                   prefix: -B
                   position: 1
               H:
-                doc: "-hist     input is a text file containing the observed histogram
-                  \n"
+                doc: "-hist     input is a text file containing the observed histogram\
+                  \ \n"
                 type: File?
                 inputBinding:
                   prefix: -H
@@ -1505,8 +1514,8 @@ steps:
               valueFrom: ${return true}
             input_file: index_dups_marked_bams/indexed_file
             outfile_name:
-              valueFrom: ${return inputs.input_file.basename.replace('dups_marked',
-                'dedup')}
+              valueFrom: ${return 
+                inputs.input_file.basename.replace('dups_marked', 'dedup')}
             suffix:
               valueFrom: .dedup.bam
           scatter:
@@ -1520,8 +1529,8 @@ steps:
 
             inputs:
               F:
-                doc: only include reads with none of the bits set in INT set in FLAG
-                  [0]
+                doc: only include reads with none of the bits set in INT set in 
+                  FLAG [0]
                 type: int?
                 inputBinding:
                   prefix: -F
@@ -1580,8 +1589,8 @@ steps:
                   prefix: -q
                   position: 1
               suffix:
-                doc: suffix of the transformed SAM/BAM file (including extension,
-                  e.g. .filtered.sam)
+                doc: suffix of the transformed SAM/BAM file (including 
+                  extension, e.g. .filtered.sam)
                 type: string?
               u:
                 doc: uncompressed BAM output (implies -b)
@@ -1706,8 +1715,8 @@ steps:
                   prefix: -@
                   position: 1
               suffix:
-                doc: suffix of the transformed SAM/BAM file (including extension,
-                  e.g. .filtered.sam)
+                doc: suffix of the transformed SAM/BAM file (including 
+                  extension, e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
 
@@ -1764,8 +1773,8 @@ steps:
                   prefix: -@
                   position: 1
               suffix:
-                doc: suffix of the transformed SAM/BAM file (including extension,
-                  e.g. .filtered.sam)
+                doc: suffix of the transformed SAM/BAM file (including 
+                  extension, e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
 
@@ -1824,8 +1833,8 @@ steps:
                   prefix: -@
                   position: 1
               suffix:
-                doc: suffix of the transformed SAM/BAM file (including extension,
-                  e.g. .filtered.sam)
+                doc: suffix of the transformed SAM/BAM file (including 
+                  extension, e.g. .filtered.sam)
                 type: string
                 default: .sorted.bam
 
@@ -1879,7 +1888,8 @@ steps:
 
       inputs:
         as_narrowPeak_file:
-          doc: Definition narrowPeak file in AutoSql format (used in bedToBigBed)
+          doc: Definition narrowPeak file in AutoSql format (used in 
+            bedToBigBed)
           type: File
         genome_effective_size:
           doc: |-
@@ -1947,7 +1957,8 @@ steps:
           run:
             cwlVersion: v1.0
             class: CommandLineTool
-            doc: Counts lines in a file and returns a suffixed file with that number
+            doc: Counts lines in a file and returns a suffixed file with that 
+              number
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -1963,8 +1974,10 @@ steps:
               output_counts:
                 type: File
                 outputBinding:
-                  glob: $(inputs.input_file.path.replace(/^.*[\\\/]/, '') + inputs.output_suffix)
-            stdout: $(inputs.input_file.path.replace(/^.*[\\\/]/, '') + inputs.output_suffix)
+                  glob: $(inputs.input_file.path.replace(/^.*[\\\/]/, '') + 
+                    inputs.output_suffix)
+            stdout: $(inputs.input_file.path.replace(/^.*[\\\/]/, '') + 
+              inputs.output_suffix)
 
             baseCommand:
             - wc
@@ -2015,7 +2028,8 @@ steps:
           run:
             cwlVersion: v1.0
             class: CommandLineTool
-            doc: Extract mapped reads from BAM file using Samtools flagstat command
+            doc: Extract mapped reads from BAM file using Samtools flagstat 
+              command
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -2095,7 +2109,8 @@ steps:
           run:
             cwlVersion: v1.0
             class: CommandLineTool
-            doc: Filter BAM file to only include reads overlapping with a BED file
+            doc: Filter BAM file to only include reads overlapping with a BED 
+              file
 
             requirements:
               InlineJavascriptRequirement: {}
@@ -2107,7 +2122,8 @@ steps:
                 inputBinding:
                   position: 3
               input_bedfile:
-                doc: Bedfile used to only include reads overlapping this BED FILE
+                doc: Bedfile used to only include reads overlapping this BED 
+                  FILE
                 type: File
                 inputBinding:
                   prefix: -L
@@ -2118,8 +2134,10 @@ steps:
                 doc: Filtered aligned BAM file by BED coordinates file
                 type: File
                 outputBinding:
-                  glob: $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '') + '.in_peaks.bam')
-            stdout: $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '') + '.in_peaks.bam')
+                  glob: $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '') + 
+                    '.in_peaks.bam')
+            stdout: $(inputs.input_bam_file.path.replace(/^.*[\\\/]/, '') + 
+              '.in_peaks.bam')
 
             baseCommand:
             - samtools
@@ -2466,8 +2484,8 @@ steps:
             arguments:
             - prefix: -n
               position: 1
-              valueFrom: $(inputs.treatment[0].path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
-                ''))
+              valueFrom: $(inputs.treatment[0].path.replace(/^.*[\\\/]/, 
+                '').replace(/\.[^/.]+$/, ''))
 
             hints:
               DockerRequirement:
@@ -2584,12 +2602,14 @@ steps:
               bigbed:
                 type: File
                 outputBinding:
-                  glob: $(inputs.bed.path.replace(/^.*[\\\/]/, '')+ inputs.output_suffix)
+                  glob: $(inputs.bed.path.replace(/^.*[\\\/]/, '')+ 
+                    inputs.output_suffix)
 
             baseCommand: bedToBigBed
             arguments:
             - position: 4
-              valueFrom: $(inputs.bed.path.replace(/^.*[\\\/]/, '') + inputs.output_suffix)
+              valueFrom: $(inputs.bed.path.replace(/^.*[\\\/]/, '') + 
+                inputs.output_suffix)
 
             hints:
               DockerRequirement:
@@ -2622,8 +2642,8 @@ steps:
                   prefix: -i=
                   separate: false
               fdr:
-                doc: -fdr=<falseDisoveryRate> , false discovery rate threshold for
-                  peak calling
+                doc: -fdr=<falseDisoveryRate> , false discovery rate threshold 
+                  for peak calling
                 type: float?
                 inputBinding:
                   prefix: -fdr=
@@ -2675,8 +2695,8 @@ steps:
                   valueFrom: |-
                     ${ if (self) return "-savd=" + inputs.input_bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".spp.Rdata"; return null}
               savn:
-                doc: -savn=<narrowpeakfilename> OR -savn NarrowPeak file name (fixed
-                  width peaks)
+                doc: -savn=<narrowpeakfilename> OR -savn NarrowPeak file name 
+                  (fixed width peaks)
                 type: boolean?
                 inputBinding:
                   valueFrom: |-
@@ -2695,7 +2715,8 @@ steps:
                   valueFrom: |-
                     ${ if (self) return "-savr=" + inputs.input_bam.path.replace(/^.*[\\\/]/, "").replace(/\.[^/.]+$/, "") + ".spp.regionPeak"; return null}
               speak:
-                doc: -speak=<strPeak>, user-defined cross-correlation peak strandshift
+                doc: -speak=<strPeak>, user-defined cross-correlation peak 
+                  strandshift
                 type: string?
                 inputBinding:
                   prefix: -speak=
@@ -3122,8 +3143,8 @@ steps:
                 inputBinding:
                   position: 2
               input_basename:
-                doc: Name of the sample - used as a base name for generating output
-                  files
+                doc: Name of the sample - used as a base name for generating 
+                  output files
                 type: string
               input_fastqc_data:
                 doc: fastqc_data.txt file from a fastqc report
@@ -3721,12 +3742,14 @@ steps:
               bed_file_sorted:
                 type: File
                 outputBinding:
-                  glob: $(inputs.bed_file.path.replace(/^.*[\\\/]/, '') + "_sorted")
+                  glob: $(inputs.bed_file.path.replace(/^.*[\\\/]/, '') + 
+                    "_sorted")
 
             baseCommand: bedSort
             arguments:
             - position: 2
-              valueFrom: $(inputs.bed_file.path.replace(/^.*[\\\/]/, '') + "_sorted")
+              valueFrom: $(inputs.bed_file.path.replace(/^.*[\\\/]/, '') + 
+                "_sorted")
 
             hints:
               DockerRequirement:
@@ -3968,10 +3991,10 @@ steps:
               output_bedfile:
                 type: File
                 outputBinding:
-                  glob: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
-                    '') + '.bdg')
-            stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/,
-              '') + '.bdg')
+                  glob: $(inputs.ibam.path.replace(/^.*[\\\/]/, 
+                    '').replace(/\.[^/.]+$/, '') + '.bdg')
+            stdout: $(inputs.ibam.path.replace(/^.*[\\\/]/, 
+              '').replace(/\.[^/.]+$/, '') + '.bdg')
 
             baseCommand:
             - bedtools
@@ -4314,14 +4337,16 @@ steps:
                   position: 15
                   separate: false
               tophred33:
-                doc: This (re)encodes the quality part of the FASTQ file to base 33.
+                doc: This (re)encodes the quality part of the FASTQ file to base
+                  33.
                 type: boolean?
                 inputBinding:
                   prefix: TOPHRED33
                   position: 12
                   separate: false
               tophred64:
-                doc: This (re)encodes the quality part of the FASTQ file to base 64.
+                doc: This (re)encodes the quality part of the FASTQ file to base
+                  64.
                 type: boolean?
                 inputBinding:
                   prefix: TOPHRED64
@@ -4416,8 +4441,8 @@ steps:
                   return null;
                 }
             - position: 11
-              valueFrom: $("ILLUMINACLIP:" + inputs.input_adapters_file.path + ":"+
-                inputs.illuminaclip)
+              valueFrom: $("ILLUMINACLIP:" + inputs.input_adapters_file.path + 
+                ":"+ inputs.illuminaclip)
 
             hints:
               DockerRequirement:
@@ -4431,7 +4456,8 @@ id: |-
   https://api.sbgenomics.com/v2/apps/kghosesbg/sbpla-31744/ATAC-seq-pipeline-se/2/raw/
 sbg:appVersion:
 - v1.0
-sbg:content_hash: ad9474546d1d7aba5aa20e3c7a03b5429e5f8ec1d18be92cbab7315600a6bce48
+sbg:content_hash: 
+  ad9474546d1d7aba5aa20e3c7a03b5429e5f8ec1d18be92cbab7315600a6bce48
 sbg:contributors:
 - kghosesbg
 sbg:createdBy: kghosesbg
