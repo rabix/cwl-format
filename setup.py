@@ -30,7 +30,7 @@ setup(
     },
     include_package_data=True,
     install_requires=[
-        "ruamel.yaml >= 0.17.23",
+        "ruamel.yaml >= 0.18.14",
     ],
     extras_require={':python_version<"3.7"': ['importlib-resources']},
 )
